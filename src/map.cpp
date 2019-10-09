@@ -144,7 +144,7 @@ bool Map::isNodeUnderground(v3s16 p)
 {
 	v3s16 blockpos = getNodeBlockPos(p);
 	MapBlock *block = getBlockNoCreateNoEx(blockpos);
-	return block && block->getIsUnderground(); 
+	return block && block->getIsUnderground();
 }
 
 bool Map::isValidPosition(v3s16 p)
@@ -476,7 +476,7 @@ void Map::PrintInfo(std::ostream &out)
 	out<<"Map: ";
 }
 
-#define WATER_DROP_BOOST 4
+
 
 enum NeighborType : u8 {
 	NEIGHBOR_UPPER,
@@ -672,6 +672,10 @@ void Map::transformLiquids(std::map<v3s16, MapBlock*> &modified_blocks,
 		s8 new_node_level = -1;
 		s8 max_node_level = -1;
 
+
+		u16 water_drop_boost = 4;
+		g_settings->getU16NoEx("water_drop_boost", water_drop_boost);
+
 		u8 range = m_nodedef->get(liquid_kind).liquid_range;
 		if (range > LIQUID_LEVEL_MAX + 1)
 			range = LIQUID_LEVEL_MAX + 1;
@@ -699,10 +703,10 @@ void Map::transformLiquids(std::map<v3s16, MapBlock*> &modified_blocks,
 				u8 nb_liquid_level = (flows[i].n.param2 & LIQUID_LEVEL_MASK);
 				switch (flows[i].t) {
 					case NEIGHBOR_UPPER:
-						if (nb_liquid_level + WATER_DROP_BOOST > max_node_level) {
+						if (nb_liquid_level + water_drop_boost > max_node_level) {
 							max_node_level = LIQUID_LEVEL_MAX;
-							if (nb_liquid_level + WATER_DROP_BOOST < LIQUID_LEVEL_MAX)
-								max_node_level = nb_liquid_level + WATER_DROP_BOOST;
+							if (nb_liquid_level + water_drop_boost < LIQUID_LEVEL_MAX)
+								max_node_level = nb_liquid_level + water_drop_boost;
 						} else if (nb_liquid_level > max_node_level) {
 							max_node_level = nb_liquid_level;
 						}
