@@ -1891,6 +1891,11 @@ MapDatabase *ServerMap::createDatabase(
 	throw BaseException(std::string("Database backend ") + name + " not supported.");
 }
 
+void ServerMap::pingDatabase()
+{
+	dbase->pingDatabase();
+}
+
 void ServerMap::beginSave()
 {
 	dbase->beginSave();
